@@ -1,31 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <!-- 預設為 Release 配置 -->
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <OutputPath>bin\$(Configuration)\netstandard2.0\</OutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="8.0.23304.9001" />
     <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.1.0" />
+    <PackageReference Include="RhinoCommon" Version="8.0.23304.9001" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Grasshopper">
-      <HintPath>C:\Program Files\Rhino 7\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
-    </Reference>
-    <Reference Include="RhinoCommon">
-      <HintPath>C:\Program Files\Rhino 7\System\RhinoCommon.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  <!-- 引用 Grasshopper 與 RhinoCommon 套件，省略硬連結的 Windows 路徑 -->
 
   <!-- 自動執行 Release 配置，將 .gha 放入 release 資料夾 -->
-  <Target Name="AfterBuild" AfterTargets="Build">
-    <MakeDir Directories="$(MSBuildProjectDirectory)\release" Condition="!Exists('$(MSBuildProjectDirectory)\release')" />
-    <Copy SourceFiles="$(TargetPath)" 
-          DestinationFiles="$(MSBuildProjectDirectory)\release\$(AssemblyName).gha" 
-          OverwriteReadOnlyFiles="true" />
+  <Target Name="CreateGha" AfterTargets="Build">
+    <MakeDir Directories="$(MSBuildProjectDirectory)/release" Condition="!Exists('$(MSBuildProjectDirectory)/release')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)/release/$(AssemblyName).gha" OverwriteReadOnlyFiles="true" />
   </Target>
 
 </Project>

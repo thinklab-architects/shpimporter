@@ -1,0 +1,24 @@
+name: Build ShpImporter
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore TY.sln
+      - name: Build
+        run: dotnet build TY.sln -c Release
+      - name: Upload GHA
+        uses: actions/upload-artifact@v3
+        with:
+          name: ShpImporterGha
+          path: ShpImporter/release/ShpImporter.gha
